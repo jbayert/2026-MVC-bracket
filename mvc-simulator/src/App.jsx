@@ -12,11 +12,25 @@ import Toast from './components/Toast';
 
 const COMPLETED_GAMES = parseResults();
 
+function getUrlPicks() {
+  try {
+    const s = new URLSearchParams(window.location.search).get('s');
+    if (!s) return null;
+    return JSON.parse(atob(s));
+  } catch {
+    return null;
+  }
+}
+
 export default function App() {
   const [regularSeasonPicks, setRegularSeasonPicks] = useState(() => {
+    const url = getUrlPicks();
+    if (url) return url.s || {};
     try { return JSON.parse(localStorage.getItem('mvc-season-picks')) || {}; } catch { return {}; }
   });
   const [bracketPicks, setBracketPicks] = useState(() => {
+    const url = getUrlPicks();
+    if (url) return url.b || {};
     try { return JSON.parse(localStorage.getItem('mvc-bracket-picks')) || {}; } catch { return {}; }
   });
   const [toast, setToast] = useState(null);
@@ -43,6 +57,18 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('mvc-bracket-picks', JSON.stringify(bracketPicks));
   }, [bracketPicks]);
+
+  // Keep URL in sync with picks so the address bar is always shareable
+  useEffect(() => {
+    const hasAnyPicks = Object.keys(regularSeasonPicks).length > 0 || Object.keys(bracketPicks).length > 0;
+    const url = new URL(window.location.href);
+    if (hasAnyPicks) {
+      url.searchParams.set('s', btoa(JSON.stringify({ s: regularSeasonPicks, b: bracketPicks })));
+    } else {
+      url.searchParams.delete('s');
+    }
+    window.history.replaceState(null, '', url);
+  }, [regularSeasonPicks, bracketPicks]);
 
   // Reset bracket whenever seedings change
   useEffect(() => {
@@ -84,9 +110,13 @@ export default function App() {
     setBracketPicks({});
   }
 
+  function handleShare() {
+    navigator.clipboard.writeText(window.location.href).then(() => showToast('Link copied!'));
+  }
+
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">
-      <Header onResetAll={handleResetAll} />
+      <Header onResetAll={handleResetAll} onShare={handleShare} />
       <div className="flex flex-col lg:flex-row gap-4 p-3 lg:p-4">
         {/* Game Picker — full width on mobile, fixed sidebar on desktop */}
         <div className="w-full lg:w-[420px] lg:shrink-0">
