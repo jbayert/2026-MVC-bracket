@@ -46,7 +46,7 @@ export default function App() {
   }, [regularSeasonPicks]);
 
   const standings = useMemo(() => computeStandings(regularSeasonPicks), [regularSeasonPicks]);
-  const seeds = useMemo(() => sortWithTiebreakers(standings, allGames), [standings, allGames]);
+  const { seeds, tiebreakerReasons } = useMemo(() => sortWithTiebreakers(standings, allGames), [standings, allGames]);
   const bracketSlots = useMemo(() => computeBracketSlots(seeds, bracketPicks), [seeds, bracketPicks]);
 
   // Persist picks to localStorage
@@ -124,7 +124,7 @@ export default function App() {
         </div>
         {/* Standings + Bracket */}
         <div className="flex-1 flex flex-col gap-4 min-w-0 overflow-x-auto">
-          <StandingsTable standings={standings} seeds={seeds} />
+          <StandingsTable standings={standings} seeds={seeds} tiebreakerReasons={tiebreakerReasons} />
           <ArchMadnessBracket
             bracketSlots={bracketSlots}
             seeds={seeds}

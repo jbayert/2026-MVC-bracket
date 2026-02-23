@@ -11,42 +11,62 @@ function h2hWins(teamA, teamB, allGames) {
   ).length;
 }
 
-// Two-team tiebreaker: returns negative if teamA should be seeded higher, positive if teamB
-// Step 1: H2H record
-// Step 2: NET ranking (lower number = better)
-function twoTeamCmp(teamA, teamB, allGames) {
-  // Step 1: H2H
+// Two-team tiebreaker with reason strings for each team
+function twoTeamCmpWithReason(teamA, teamB, allGames) {
   const aWins = h2hWins(teamA, teamB, allGames);
   const bWins = h2hWins(teamB, teamA, allGames);
-  if (aWins > bWins) return -1;
-  if (bWins > aWins) return 1;
 
-  // Step 2: NET ranking (lower rank = higher seed)
+  if (aWins !== bWins) {
+    return {
+      cmp: aWins > bWins ? -1 : 1,
+      reasonA: `H2H vs ${teamB}: ${aWins}–${bWins}`,
+      reasonB: `H2H vs ${teamA}: ${bWins}–${aWins}`,
+    };
+  }
+
   const aNet = NET_RANKINGS[teamA] ?? 999;
   const bNet = NET_RANKINGS[teamB] ?? 999;
-  return aNet - bNet; // negative = teamA higher seed, positive = teamB higher seed
+  const prefix = aWins + bWins > 0 ? `H2H split (${aWins}–${bWins}) → ` : '';
+  return {
+    cmp: aNet - bNet,
+    reasonA: `${prefix}NET ranking: #${aNet} vs #${bNet}`,
+    reasonB: `${prefix}NET ranking: #${bNet} vs #${aNet}`,
+  };
 }
 
-// Sort a tied group (2+ teams) recursively
+// Sort a tied group (2+ teams) recursively; returns { sorted, reasons }
 function sortTiedGroup(tiedTeams, allGames) {
-  if (tiedTeams.length === 1) return tiedTeams;
+  const reasons = {};
+
+  if (tiedTeams.length === 1) return { sorted: tiedTeams, reasons };
 
   if (tiedTeams.length === 2) {
     const [a, b] = tiedTeams;
-    const cmp = twoTeamCmp(a, b, allGames);
-    return cmp <= 0 ? [a, b] : [b, a];
+    const { cmp, reasonA, reasonB } = twoTeamCmpWithReason(a, b, allGames);
+    reasons[a] = reasonA;
+    reasons[b] = reasonB;
+    return { sorted: cmp <= 0 ? [a, b] : [b, a], reasons };
   }
 
   // Multi-team: round-robin H2H win% among tied teams only
-  const pctMap = {};
+  const winsMap = {};
+  const gamesMap = {};
   for (const team of tiedTeams) {
     let wins = 0, games = 0;
     for (const opp of tiedTeams) {
       if (opp === team) continue;
-      wins += h2hWins(team, opp, allGames);
-      games += h2hWins(team, opp, allGames) + h2hWins(opp, team, allGames);
+      const w = h2hWins(team, opp, allGames);
+      const l = h2hWins(opp, team, allGames);
+      wins += w;
+      games += w + l;
     }
-    pctMap[team] = games > 0 ? wins / games : 0;
+    winsMap[team] = wins;
+    gamesMap[team] = games;
+  }
+
+  const pctMap = {};
+  for (const team of tiedTeams) {
+    pctMap[team] = gamesMap[team] > 0 ? winsMap[team] / gamesMap[team] : 0;
   }
 
   // Group by H2H win%
@@ -63,24 +83,39 @@ function sortTiedGroup(tiedTeams, allGames) {
   for (const pct of sortedPcts) {
     const subGroup = byPct[pct];
     if (subGroup.length === 1) {
-      // Fully separated — done
-      result.push(subGroup[0]);
+      const team = subGroup[0];
+      const w = winsMap[team], g = gamesMap[team];
+      reasons[team] = g > 0
+        ? `Round-robin H2H: ${w}–${g - w} vs group`
+        : 'NET ranking (no H2H games played yet)';
+      result.push(team);
     } else if (subGroup.length === 2) {
-      // Exactly 2 remain tied — revert to two-team tiebreaker (H2H → NET)
       const [a, b] = subGroup;
-      const cmp = twoTeamCmp(a, b, allGames);
+      const wa = winsMap[a], ga = gamesMap[a];
+      const rrNote = ga > 0 ? `Round-robin H2H split (${wa}–${ga - wa}) → ` : '';
+      const { cmp, reasonA, reasonB } = twoTeamCmpWithReason(a, b, allGames);
+      reasons[a] = rrNote + reasonA;
+      reasons[b] = rrNote + reasonB;
       result.push(cmp <= 0 ? a : b, cmp <= 0 ? b : a);
     } else {
       // 3+ teams all had identical round-robin records — rank by NET
-      result.push(...subGroup.sort((a, b) => (NET_RANKINGS[a] ?? 999) - (NET_RANKINGS[b] ?? 999)));
+      const sorted = [...subGroup].sort((a, b) => (NET_RANKINGS[a] ?? 999) - (NET_RANKINGS[b] ?? 999));
+      for (const team of sorted) {
+        const w = winsMap[team], g = gamesMap[team];
+        const rrNote = g > 0 ? `Round-robin H2H split (${w}–${g - w}) → ` : '';
+        reasons[team] = `${rrNote}NET ranking: #${NET_RANKINGS[team] ?? 999}`;
+      }
+      result.push(...sorted);
     }
   }
-  return result;
+  return { sorted: result, reasons };
 }
 
-// Main export: returns seeds array (index 0 = #1 seed)
+// Main export: returns { seeds, tiebreakerReasons }
+// tiebreakerReasons: map of team name → { tiedWith: [...], description: string }
 export function sortWithTiebreakers(standings, allGames) {
   const teams = Object.keys(standings);
+  const tiebreakerReasons = {};
 
   // Group teams by W-L record
   const groups = {};
@@ -98,14 +133,21 @@ export function sortWithTiebreakers(standings, allGames) {
     return getPct(bw, bl) - getPct(aw, al);
   });
 
-  const result = [];
+  const seeds = [];
   for (const key of sortedKeys) {
     const group = groups[key];
     if (group.length === 1) {
-      result.push(group[0]);
+      seeds.push(group[0]);
     } else {
-      result.push(...sortTiedGroup(group, allGames));
+      const { sorted, reasons } = sortTiedGroup(group, allGames);
+      seeds.push(...sorted);
+      for (const team of sorted) {
+        tiebreakerReasons[team] = {
+          tiedWith: sorted.filter((t) => t !== team),
+          description: reasons[team] || null,
+        };
+      }
     }
   }
-  return result;
+  return { seeds, tiebreakerReasons };
 }

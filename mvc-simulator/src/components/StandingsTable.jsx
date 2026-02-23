@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { getPct, getGB } from '../utils/standings';
 
-export default function StandingsTable({ standings, seeds }) {
+export default function StandingsTable({ standings, seeds, tiebreakerReasons }) {
+  const [openTip, setOpenTip] = useState(null);
+
   if (!seeds.length) return null;
 
   const leader = seeds[0];
@@ -55,15 +58,17 @@ export default function StandingsTable({ standings, seeds }) {
               const isBye = seed <= 5;
               const gb = seed === 1 ? '—' : getGB(lw, ll, w, l).toFixed(1);
               const pct = getPct(w, l).toFixed(3).replace(/^0/, '');
+              const reason = tiebreakerReasons?.[team];
+              const tipOpen = openTip === team;
 
               return (
                 <tr
                   key={team}
                   className={`border-t border-gray-800 ${isBye ? 'bg-indigo-950/40' : ''}`}
                 >
-                  <td className="py-1.5 pr-2 text-gray-500 text-xs">{displaySeeds[idx]}</td>
+                  <td className="py-1.5 pr-2 text-gray-500 text-xs align-top pt-2">{displaySeeds[idx]}</td>
                   <td className="py-1.5">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                       <span className={isBye ? 'text-white font-medium' : 'text-gray-300'}>
                         {team}
                       </span>
@@ -72,12 +77,34 @@ export default function StandingsTable({ standings, seeds }) {
                           BYE
                         </span>
                       )}
+                      {reason && (
+                        <button
+                          onClick={() => setOpenTip(tipOpen ? null : team)}
+                          className="text-indigo-400 hover:text-indigo-200 transition-colors leading-none"
+                          title="Tiebreaker info"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                          </svg>
+                        </button>
+                      )}
                     </div>
+                    {tipOpen && reason && (
+                      <div className="mt-1.5 text-xs bg-gray-800 border border-gray-700 rounded px-2.5 py-2 max-w-xs">
+                        <div className="text-indigo-300 font-semibold mb-1">Tiebreaker applied</div>
+                        <div className="text-gray-200">{reason.description}</div>
+                        <div className="text-gray-500 mt-1">
+                          Tied with: {reason.tiedWith.join(', ')}
+                        </div>
+                      </div>
+                    )}
                   </td>
-                  <td className="py-1.5 text-right text-gray-300">{w}</td>
-                  <td className="py-1.5 text-right text-gray-300">{l}</td>
-                  <td className="py-1.5 text-right text-gray-500 text-xs hidden sm:table-cell">{gb}</td>
-                  <td className="py-1.5 text-right text-gray-500 text-xs">{pct}</td>
+                  <td className="py-1.5 text-right text-gray-300 align-top pt-2">{w}</td>
+                  <td className="py-1.5 text-right text-gray-300 align-top pt-2">{l}</td>
+                  <td className="py-1.5 text-right text-gray-500 text-xs hidden sm:table-cell align-top pt-2">{gb}</td>
+                  <td className="py-1.5 text-right text-gray-500 text-xs align-top pt-2">{pct}</td>
                 </tr>
               );
             })}
