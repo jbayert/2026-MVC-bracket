@@ -53,9 +53,9 @@ User picks (regularSeasonPicks state)  ├→ allGames → sortWithTiebreakers()
 11 teams, 4 rounds (seeds 1–5 get first-round byes):
 
 ```
-R1A: (6) v (11) → QF3-B    R1B: (7) v (10) → QF2-B    R1C: (8) v (9) → QF1-B
-QF1: (1) v R1C-winner       QF2: (4) v R1B-winner
-QF3: (2) v R1A-winner       QF4: (3) v (5)
+R1A: (6) v (11) → QF4-B    R1B: (7) v (10) → QF3-B    R1C: (8) v (9) → QF1-B
+QF1: (1) v R1C-winner       QF2: (4) v (5)
+QF3: (2) v R1B-winner       QF4: (3) v R1A-winner
 SF1: QF1w v QF2w            SF2: QF3w v QF4w
 F:   SF1w v SF2w
 ```

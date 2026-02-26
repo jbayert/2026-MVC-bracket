@@ -7,9 +7,9 @@
 //
 // QUARTERFINALS:
 //   QF1: (1) vs R1C winner
-//   QF2: (4) vs R1B winner
-//   QF3: (2) vs R1A winner
-//   QF4: (3) vs (5)
+//   QF2: (4) vs (5)
+//   QF3: (2) vs R1B winner
+//   QF4: (3) vs R1A winner
 //
 // SEMIFINALS:
 //   SF1: QF1 winner vs QF2 winner
@@ -28,9 +28,9 @@ export function computeBracketSlots(seeds, bracketPicks) {
   };
 
   slots.QF1 = { teamA: s(1), teamB: slots.R1C.winner, winner: bracketPicks.QF1 || null };
-  slots.QF2 = { teamA: s(4), teamB: slots.R1B.winner, winner: bracketPicks.QF2 || null };
-  slots.QF3 = { teamA: s(2), teamB: slots.R1A.winner, winner: bracketPicks.QF3 || null };
-  slots.QF4 = { teamA: s(3), teamB: s(5),              winner: bracketPicks.QF4 || null };
+  slots.QF2 = { teamA: s(4), teamB: s(5),              winner: bracketPicks.QF2 || null };
+  slots.QF3 = { teamA: s(2), teamB: slots.R1B.winner, winner: bracketPicks.QF3 || null };
+  slots.QF4 = { teamA: s(3), teamB: slots.R1A.winner, winner: bracketPicks.QF4 || null };
 
   slots.SF1 = { teamA: slots.QF1.winner, teamB: slots.QF2.winner, winner: bracketPicks.SF1 || null };
   slots.SF2 = { teamA: slots.QF3.winner, teamB: slots.QF4.winner, winner: bracketPicks.SF2 || null };
@@ -42,8 +42,8 @@ export function computeBracketSlots(seeds, bracketPicks) {
 
 // Downstream dependency map: picking gameId clears these games too
 const DOWNSTREAM = {
-  R1A: ['QF3', 'SF2', 'F'],
-  R1B: ['QF2', 'SF1', 'F'],
+  R1A: ['QF4', 'SF2', 'F'],
+  R1B: ['QF3', 'SF2', 'F'],
   R1C: ['QF1', 'SF1', 'F'],
   QF1: ['SF1', 'F'],
   QF2: ['SF1', 'F'],

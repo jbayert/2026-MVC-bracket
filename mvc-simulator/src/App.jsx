@@ -80,7 +80,6 @@ export default function App() {
     if (changed) {
       setBracketPicks({});
       prevSeedsRef.current = seeds;
-      showToast('Standings updated — bracket reset.');
     }
   }, [seeds]);
 

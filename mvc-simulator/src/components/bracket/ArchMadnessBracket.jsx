@@ -44,14 +44,14 @@ function buildConnectors() {
   const vMid = (x) => x - CG / 2; // x of vertical connector line (between columns)
 
   return [
-    // R1A → QF3: R1A winner enters QF3's team-B slot (lower half)
+    // R1B → QF3: R1B winner enters QF3's team-B slot
     `M ${R1_X + CW} ${QF3_Y + mid} H ${vMid(QF_X)} V ${QF3_Y + slotH + slotH / 2} H ${QF_X}`,
 
     // R1C → QF1: R1C winner enters QF1's team-B slot
     `M ${R1_X + CW} ${QF1_Y + mid} H ${vMid(QF_X)} V ${QF1_Y + slotH + slotH / 2} H ${QF_X}`,
 
-    // R1B → QF2: R1B winner enters QF2's team-B slot
-    `M ${R1_X + CW} ${QF2_Y + mid} H ${vMid(QF_X)} V ${QF2_Y + slotH + slotH / 2} H ${QF_X}`,
+    // R1A → QF4: R1A winner enters QF4's team-B slot
+    `M ${R1_X + CW} ${QF4_Y + mid} H ${vMid(QF_X)} V ${QF4_Y + slotH + slotH / 2} H ${QF_X}`,
 
     // QF3 + QF4 → SF2
     `M ${QF_X + CW} ${QF3_Y + mid} H ${vMid(SF_X)} V ${QF4_Y + mid} M ${QF_X + CW} ${QF4_Y + mid} H ${vMid(SF_X)} M ${vMid(SF_X)} ${SF2_Y_REAL + mid} H ${SF_X}`,
@@ -139,13 +139,13 @@ export default function ArchMadnessBracket({ bracketSlots, seeds, onPick, onRese
 
           {/* First Round */}
           <div className="absolute" style={{ left: R1_X, top: QF3_Y }}>
+            <BracketGame gameId="R1B" {...R1B} seedA={7} seedB={10} onPick={onPick} />
+          </div>
+          <div className="absolute" style={{ left: R1_X, top: QF4_Y }}>
             <BracketGame gameId="R1A" {...R1A} seedA={6} seedB={11} onPick={onPick} />
           </div>
           <div className="absolute" style={{ left: R1_X, top: QF1_Y }}>
             <BracketGame gameId="R1C" {...R1C} seedA={8} seedB={9} onPick={onPick} />
-          </div>
-          <div className="absolute" style={{ left: R1_X, top: QF2_Y }}>
-            <BracketGame gameId="R1B" {...R1B} seedA={7} seedB={10} onPick={onPick} />
           </div>
 
           {/* Quarterfinals */}
@@ -153,13 +153,13 @@ export default function ArchMadnessBracket({ bracketSlots, seeds, onPick, onRese
             <BracketGame gameId="QF3" {...QF3} seedA={2} onPick={onPick} />
           </div>
           <div className="absolute" style={{ left: QF_X, top: QF4_Y }}>
-            <BracketGame gameId="QF4" {...QF4} seedA={3} seedB={5} onPick={onPick} />
+            <BracketGame gameId="QF4" {...QF4} seedA={3} onPick={onPick} />
           </div>
           <div className="absolute" style={{ left: QF_X, top: QF1_Y }}>
             <BracketGame gameId="QF1" {...QF1} seedA={1} onPick={onPick} />
           </div>
           <div className="absolute" style={{ left: QF_X, top: QF2_Y }}>
-            <BracketGame gameId="QF2" {...QF2} seedA={4} onPick={onPick} />
+            <BracketGame gameId="QF2" {...QF2} seedA={4} seedB={5} onPick={onPick} />
           </div>
 
           {/* Semifinals */}
