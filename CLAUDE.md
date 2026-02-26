@@ -72,7 +72,13 @@ When modifying bracket layout, adjust the Y/X position constants directly — al
 
 ## Adding Completed Games
 
-Edit `src/data/results.csv`. Each row: `away_team,home_team,winner_team`. Team names must exactly match those in `TEAMS` in `constants.js`.
+When new game results are provided, two files must be updated:
+
+1. **`src/data/results.csv`** — append one row per game: `away_team,home_team,winner_team`. Team names must exactly match those in `TEAMS` in `constants.js`. (Used for H2H tiebreaker calculations only.)
+
+2. **`src/constants.js` → `REMAINING_GAMES`** — remove the corresponding entries so completed games no longer appear as pickable in the UI.
+
+3. **`src/constants.js` → `INITIAL_STANDINGS`** — update the W-L record for each team involved. This is the base the standings computation works from; `results.csv` does **not** feed into W-L totals.
 
 ## Deployment Notes
 
