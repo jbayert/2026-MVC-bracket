@@ -5,9 +5,9 @@ export const TEAMS = [
 
 export const INITIAL_STANDINGS = {
   'Belmont':           { w: 15, l: 3 },
-  'Bradley':           { w: 12, l: 6 },
+  'Bradley':           { w: 12, l: 7 },
   'Murray State':      { w: 12, l: 7 },
-  'UIC':               { w: 11, l: 7 },
+  'UIC':               { w: 12, l: 7 },
   'Illinois State':    { w: 10, l: 8 },
   'UNI':               { w: 10, l: 8 },
   'Valparaiso':        { w: 10, l: 8 },
@@ -32,7 +32,6 @@ export const NET_RANKINGS = {
 };
 
 export const REMAINING_GAMES = [
-  { id: 'G1',  date: 'Feb 24', away: 'Bradley',        home: 'UIC',               location: 'Chicago, IL' },
   { id: 'G2',  date: 'Feb 25', away: 'Evansville',     home: 'Belmont',           location: 'Nashville, TN' },
   { id: 'G3',  date: 'Feb 25', away: 'Illinois State', home: 'UNI',               location: 'Cedar Falls, IA' },
   { id: 'G4',  date: 'Feb 25', away: 'Indiana State',  home: 'Southern Illinois', location: 'Carbondale, IL' },

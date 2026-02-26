@@ -1,1 +1,101 @@
 away,home,winner
+UIC,Belmont,Belmont
+Belmont,Evansville,Belmont
+UNI,UIC,UNI
+Bradley,Indiana State,Bradley
+Drake,Murray State,Murray State
+Illinois State,Southern Illinois,Illinois State
+Murray State,Valparaiso,Murray State
+Southern Illinois,Bradley,Bradley
+Drake,Evansville,Drake
+Indiana State,Illinois State,Illinois State
+Belmont,Indiana State,Indiana State
+Southern Illinois,Murray State,Murray State
+Evansville,Bradley,Bradley
+Valparaiso,UNI,UNI
+Illinois State,Drake,Illinois State
+Evansville,Illinois State,Illinois State
+Valparaiso,Southern Illinois,Southern Illinois
+Bradley,Belmont,Belmont
+Indiana State,UNI,UNI
+Murray State,UIC,Murray State
+UIC,Valparaiso,Valparaiso
+Indiana State,Drake,Drake
+UNI,Evansville,UNI
+Southern Illinois,Belmont,Southern Illinois
+Bradley,Murray State,Murray State
+Belmont,UNI,Belmont
+Southern Illinois,UIC,UIC
+Illinois State,Valparaiso,Valparaiso
+Murray State,Evansville,Murray State
+Drake,Bradley,Bradley
+UNI,Bradley,Bradley
+Evansville,Indiana State,Evansville
+Valparaiso,Murray State,Murray State
+UIC,Illinois State,UIC
+Belmont,Drake,Belmont
+UIC,UNI,UIC
+Valparaiso,Belmont,Belmont
+Bradley,Evansville,Bradley
+Illinois State,Indiana State,Indiana State
+Drake,Southern Illinois,Drake
+Bradley,Illinois State,Illinois State
+Drake,UIC,UIC
+UNI,Valparaiso,Valparaiso
+Indiana State,Murray State,Murray State
+Belmont,Southern Illinois,Belmont
+Evansville,UIC,UIC
+Indiana State,Bradley,Bradley
+Murray State,Drake,Drake
+Southern Illinois,Valparaiso,Valparaiso
+UNI,Illinois State,Illinois State
+Illinois State,Belmont,Belmont
+Drake,Indiana State,Drake
+Murray State,UNI,UNI
+UIC,Bradley,UIC
+Indiana State,UIC,UIC
+UNI,Southern Illinois,Southern Illinois
+Evansville,Drake,Drake
+Belmont,Valparaiso,Belmont
+Illinois State,Murray State,Illinois State
+Valparaiso,Indiana State,Valparaiso
+Evansville,UNI,UNI
+Bradley,Drake,Bradley
+UIC,Southern Illinois,UIC
+Murray State,Belmont,Belmont
+Southern Illinois,Illinois State,Southern Illinois
+Indiana State,Evansville,Indiana State
+UIC,Murray State,Murray State
+Valparaiso,Bradley,Bradley
+Drake,Belmont,Belmont
+Bradley,UNI,UNI
+Drake,Illinois State,Illinois State
+Evansville,Valparaiso,Valparaiso
+Murray State,Southern Illinois,Murray State
+Belmont,UIC,Belmont
+Southern Illinois,Indiana State,Southern Illinois
+Valparaiso,Drake,Valparaiso
+Belmont,Bradley,Bradley
+Illinois State,Evansville,Evansville
+UNI,Murray State,UNI
+Murray State,Indiana State,Murray State
+Valparaiso,Illinois State,Illinois State
+UIC,Drake,UIC
+Evansville,Southern Illinois,Southern Illinois
+UNI,Belmont,Belmont
+Bradley,Southern Illinois,Bradley
+Indiana State,Valparaiso,Valparaiso
+Illinois State,UIC,UIC
+Drake,UNI,UNI
+Belmont,Murray State,Belmont
+Bradley,Valparaiso,Valparaiso
+UNI,Indiana State,UNI
+Southern Illinois,Drake,Southern Illinois
+UIC,Evansville,UIC
+Murray State,Illinois State,Illinois State
+Illinois State,Bradley,Bradley
+Valparaiso,UIC,Valparaiso
+Evansville,Murray State,Murray State
+Southern Illinois,UNI,Southern Illinois
+Indiana State,Belmont,Belmont
+Bradley,UIC,UIC
